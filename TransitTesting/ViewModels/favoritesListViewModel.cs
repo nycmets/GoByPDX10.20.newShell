@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace GoByPDX.ViewModels
 {
@@ -124,6 +125,26 @@ namespace GoByPDX.ViewModels
                     conn.Insert(objContact);
                 });
             }
+        }
+
+        public object FavRouteButtonToggled(ToggleButton ToggleFavRouteButton, ComboBox routeComboBox, ComboBox directionComboBox, ComboBox stopsComboBox)
+        {
+            //favoritesListViewModel favListModel = new favoritesListViewModel();
+            if (ToggleFavRouteButton.IsChecked == true)
+            {
+                ToggleFavRouteButton.Content = "\uE1CF";
+                insertFav(routeComboBox, directionComboBox, stopsComboBox);
+            }
+            if (ToggleFavRouteButton.IsChecked == false)
+            {
+                ToggleFavRouteButton.Content = "\uE1CE";
+                int contactid = updateFavoriteDB(routeComboBox, directionComboBox, stopsComboBox);
+                if (contactid != -1)
+                {
+                    DeleteContact(contactid);
+                }
+            }
+            return ToggleFavRouteButton.Content;
         }
 
         public int updateFavoriteDB(ComboBox routeComboBox, ComboBox directionComboBox, ComboBox stopsComboBox)

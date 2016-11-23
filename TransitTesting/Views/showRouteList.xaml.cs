@@ -193,23 +193,12 @@ namespace GoByPDX.Views
 
             if (routeComboBox_all != null && dirComboBox_all != null && stopsComboBox_all != null)
             {
-                favoritesListViewModel favListModel = new favoritesListViewModel();
-                if (ToggleFavRouteButton.IsChecked == true)
-                {
-                    ToggleFavRouteButton.Content = "\uE1CF";
-                    favListModel.insertFav(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
-                }
-                if (ToggleFavRouteButton.IsChecked == false)
-                {
-                    ToggleFavRouteButton.Content = "\uE1CE";
-                    int contactid = favListModel.updateFavoriteDB(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
-                    if (contactid != -1)
-                    {
-                        favListModel.DeleteContact(contactid);
-                    }
-                }               
+                favoritesListViewModel favListVM = new favoritesListViewModel();
+                ToggleFavRouteButton.Content = favListVM.FavRouteButtonToggled(ToggleFavRouteButton, routeComboBox_all, dirComboBox_all, stopsComboBox_all);
             }
         }
+
+
     }
 }
 

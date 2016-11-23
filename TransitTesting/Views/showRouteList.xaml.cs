@@ -38,6 +38,8 @@ namespace GoByPDX.Views
     /// </summary>
     public sealed partial class showRouteList : Page
     {
+        funcsNonStatic funcsNonStatic = new GoByPDX.funcsNonStatic();
+
         async private void messageFunc()
         {
             Frame rootFrame = Window.Current.Content as Frame;
@@ -141,45 +143,18 @@ namespace GoByPDX.Views
 
         private void showNextArrivals(object sender, SelectionChangedEventArgs tmp)
         {
- 
-            string routeComboBoxValueDesc = functions.myComboVal(routeComboBox.SelectedValue, cRouteComboBox.SelectedValue);
+            ComboBox routeComboBox_all = functions.comboSelection(routeComboBox, cRouteComboBox);
+            ComboBox dirComboBox_all   = functions.comboSelection(directionComboBox, cDirectionComboBox);
+            ComboBox stopsComboBox_all = functions.comboSelection(stopsComboBox, cStopsComboBox);
 
-            string routeID = "";
-            var routeClass = App.routeListViewModel.routes.Where(e => String.Equals(e.desc, routeComboBoxValueDesc)).Select(ret2 => ret2);
-
-            foreach (var ret in routeClass) { routeID = ret.route; }
-
-            string description = functions.myComboVal(stopsComboBox.SelectedValue, cStopsComboBox.SelectedValue);
-
-            if (description != "" && description != null)
-            { 
-                string locIDs = "";
-                var stopClass = App.routeListViewModel.stops.Where(e => String.Equals(e.desc, description)).Select(ret2 => ret2);
-
-                foreach (var ret in stopClass) { locIDs = ret.LocID; }
-                App.routeListViewModel.loadNextArrivals(locIDs, routeID);
-                //this.DataContext = App.routeListViewModel;
-            }
-            //TODO CHeck the favorite star and see if route is favorite
-            if (cRouteComboBox.SelectedValue != null && cDirectionComboBox.SelectedValue != null && cStopsComboBox.SelectedValue != null)
+            if (routeComboBox_all != null && dirComboBox_all != null && stopsComboBox_all != null)
             {
-                string Route = cRouteComboBox.SelectedValue.ToString();
-                string Dir = cDirectionComboBox.SelectedValue.ToString();
-                string Stop = cStopsComboBox.SelectedValue.ToString();
-
-                int contactid = UpdateDetails(Route, Dir, Stop);
-                if (contactid != -1)
-                {
-                    ToggleFavRouteButton.IsChecked = true;
-                } else
-                {
-                    ToggleFavRouteButton.IsChecked = false;
-                }
-            } else
+                ToggleFavRouteButton.IsChecked = App.routeListViewModel.showNextArrivals(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
+            }
+            else
             {
                 ToggleFavRouteButton.IsChecked = false;
             }
-
         }
 
         private void transitSelected(object sender, SelectionChangedEventArgs e)
@@ -198,9 +173,7 @@ namespace GoByPDX.Views
 
                 foreach (var ret in vehicleClass)
                 {
-
                     vehicleID = ret.vehicleID;
-
                 }
 
                 App.lastState.vehicleID = vehicleID;
@@ -212,88 +185,30 @@ namespace GoByPDX.Views
             }
         }
 
-        private void FavRouteButtonUnChecked(object sender, RoutedEventArgs e)
+        private void FavRouteButtonToggled(object sender, RoutedEventArgs e)
         {
-            ToggleFavRouteButton.Content = "\uE1CE";
-            SolidColorBrush blackBrush = new SolidColorBrush(Windows.UI.Colors.Black);
-            //ToggleFavRouteButton.Foreground = blackBrush;
-            //ToggleFavRouteButton.Foreground = Theme SystemControlForegroundBaseHighBrush
-            //ToggleFavRouteButton.Foreground = { SystemControlForegroundBaseHighBrush;
-            Dto.Favorites favorite = new Dto.Favorites();
-            if (cRouteComboBox.SelectedValue != null && cDirectionComboBox.SelectedValue != null && cStopsComboBox.SelectedValue != null)
-            {
-                favorite.Route = cRouteComboBox.SelectedValue.ToString();
-                favorite.Dir = cDirectionComboBox.SelectedValue.ToString();
-                favorite.Stop = cStopsComboBox.SelectedValue.ToString();
+            ComboBox routeComboBox_all = functions.comboSelection(routeComboBox, cRouteComboBox);
+            ComboBox dirComboBox_all = functions.comboSelection(directionComboBox, cDirectionComboBox);
+            ComboBox stopsComboBox_all = functions.comboSelection(stopsComboBox, cStopsComboBox);
 
-                favorite.routeComboIndex = cRouteComboBox.SelectedIndex;
-                favorite.dirComboIndex = cDirectionComboBox.SelectedIndex;
-                favorite.stopComboIndex = cStopsComboBox.SelectedIndex;
-                int contactid = UpdateDetails(favorite.Route, favorite.Dir, favorite.Stop);
-                // return the cid if this exists or null if it doesn't
-                if (contactid != -1)
+            if (routeComboBox_all != null && dirComboBox_all != null && stopsComboBox_all != null)
+            {
+                favoritesListViewModel favListModel = new favoritesListViewModel();
+                if (ToggleFavRouteButton.IsChecked == true)
                 {
-                    favoritesListViewModel favListVM = new favoritesListViewModel();
-                    favListVM.DeleteContact(contactid);
+                    ToggleFavRouteButton.Content = "\uE1CF";
+                    favListModel.insertFav(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
                 }
-            }
-        }
-
-        private void FavRouteButtonChecked(object sender, RoutedEventArgs e)
-        {
-            ToggleFavRouteButton.Content = "\uE1CF";
-            //SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.DarkGoldenrod);
-            //ToggleFavRouteButton.Foreground = yellowBrush;
-            Dto.Favorites favorite = new Dto.Favorites();
-            if (cRouteComboBox.SelectedValue != null && cDirectionComboBox.SelectedValue != null && cStopsComboBox.SelectedValue != null)
-            {
-                favorite.Route = cRouteComboBox.SelectedValue.ToString();
-                favorite.Dir = cDirectionComboBox.SelectedValue.ToString();
-                favorite.Stop = cStopsComboBox.SelectedValue.ToString();
-
-                favorite.routeComboIndex = cRouteComboBox.SelectedIndex;
-                favorite.dirComboIndex = cDirectionComboBox.SelectedIndex;
-                favorite.stopComboIndex = cStopsComboBox.SelectedIndex;
-                int contactid = UpdateDetails(favorite.Route, favorite.Dir, favorite.Stop);
-
-                if (contactid == -1)
+                if (ToggleFavRouteButton.IsChecked == false)
                 {
-                    Insert(favorite);
-                }
+                    ToggleFavRouteButton.Content = "\uE1CE";
+                    int contactid = favListModel.updateFavoriteDB(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
+                    if (contactid != -1)
+                    {
+                        favListModel.DeleteContact(contactid);
+                    }
+                }               
             }
-        }
-
-        public void Insert(Favorites objContact)
-        {
-            string sqlpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "TransitFavorites.sqlite");
-            using (SQLiteConnection conn = new SQLiteConnection(new SQLitePlatformWinRT(), sqlpath))
-            {
-                conn.RunInTransaction(() =>
-                {
-                    conn.Insert(objContact);
-                });
-            }
-        }
-
-       
-        public int UpdateDetails(string route, string dir, string stop)
-        {
-            int contactid = -1;
-            string sqlpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "TransitFavorites.sqlite");
-            using (SQLiteConnection conn = new SQLiteConnection(new SQLitePlatformWinRT(), sqlpath))
-            {
-                List<Favorites> myCollection = conn.Table<Favorites>().ToList<Favorites>();
-                ObservableCollection<Favorites> FavoritesList = new ObservableCollection<Favorites>(myCollection);
-
-                var existingFavorite = conn.Query<Favorites>("SELECT * from Favorites WHERE Route= \'" + route + "\' and Dir= \'" + dir + "\' and Stop= \'" + stop + "\'").FirstOrDefault();
-                //var existingFavorite = conn.Query<Favorites>("select * from Favorites LIMIT).FirstOrDefault();
-
-                if (existingFavorite != null)
-                {
-                    contactid = existingFavorite.Id;
-                }
-            }
-            return contactid;
         }
     }
 }

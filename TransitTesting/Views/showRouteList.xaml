@@ -74,7 +74,7 @@
                         Style="{StaticResource FavRouteButtonStyle}"
                       IsChecked="{Binding IsPaneOpen, ElementName=RootSplitView, Mode=TwoWay}"
                       AutomationProperties.Name="Navigation"
-                      ToolTipService.ToolTip="Navigation" Grid.ColumnSpan="2" Grid.Column="1" Checked="FavRouteButtonChecked" Unchecked="FavRouteButtonUnChecked">
+                      ToolTipService.ToolTip="Navigation" Grid.ColumnSpan="2" Grid.Column="1" Checked="FavRouteButtonToggled" Unchecked="FavRouteButtonToggled">
                     </ToggleButton>
                 </Grid>
 

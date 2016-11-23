@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace GoByPDX.ViewModels
 {
@@ -46,7 +47,6 @@ namespace GoByPDX.ViewModels
             return myCollection;
         }
 
-        //Delete specific student  
         public void DeleteContact(int contactid)
         {
             string sqlpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "TransitFavorites.sqlite");
@@ -73,5 +73,74 @@ namespace GoByPDX.ViewModels
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public int UpdateDetails(string route, string dir, string stop)
+        {
+            int contactid = -1;
+            string sqlpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "TransitFavorites.sqlite");
+            using (SQLiteConnection conn = new SQLiteConnection(new SQLitePlatformWinRT(), sqlpath))
+            {
+                List<Favorites> myCollection = conn.Table<Favorites>().ToList<Favorites>();
+                ObservableCollection<Favorites> FavoritesList = new ObservableCollection<Favorites>(myCollection);
+
+                var existingFavorite = conn.Query<Favorites>("SELECT * from Favorites WHERE Route= \'" + route + "\' and Dir= \'" + dir + "\' and Stop= \'" + stop + "\'").FirstOrDefault();
+                //var existingFavorite = conn.Query<Favorites>("select * from Favorites LIMIT).FirstOrDefault();
+
+                if (existingFavorite != null)
+                {
+                    contactid = existingFavorite.Id;
+                }
+            }
+            return contactid;
+        }
+
+        public void insertFav(ComboBox routeComboBox, ComboBox directionComboBox, ComboBox stopsComboBox)
+        { 
+            Dto.Favorites favorite = new Dto.Favorites();
+            ////if (cRouteComboBox.SelectedValue != null && cDirectionComboBox.SelectedValue != null && cStopsComboBox.SelectedValue != null)
+            ////{
+            favorite.Route = routeComboBox.SelectedValue.ToString();
+            favorite.Dir = directionComboBox.SelectedValue.ToString();
+            favorite.Stop = stopsComboBox.SelectedValue.ToString();
+
+            favorite.routeComboIndex = routeComboBox.SelectedIndex;
+            favorite.dirComboIndex = directionComboBox.SelectedIndex;
+            favorite.stopComboIndex = stopsComboBox.SelectedIndex;
+            int contactid = UpdateDetails(favorite.Route, favorite.Dir, favorite.Stop);
+
+            if (contactid == -1)
+            {
+                Insert(favorite);
+            }
+        }
+
+        public void Insert(Favorites objContact)
+        {
+            string sqlpath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "TransitFavorites.sqlite");
+            using (SQLiteConnection conn = new SQLiteConnection(new SQLitePlatformWinRT(), sqlpath))
+            {
+                conn.RunInTransaction(() =>
+                {
+                    conn.Insert(objContact);
+                });
+            }
+        }
+
+        public int updateFavoriteDB(ComboBox routeComboBox, ComboBox directionComboBox, ComboBox stopsComboBox)
+        {
+            Dto.Favorites favorite = new Dto.Favorites();
+            //if (cRouteComboBox.SelectedValue != null && cDirectionComboBox.SelectedValue != null && cStopsComboBox.SelectedValue != null)
+            //{
+            favorite.Route = routeComboBox.SelectedValue.ToString();
+            favorite.Dir = directionComboBox.SelectedValue.ToString();
+            favorite.Stop = stopsComboBox.SelectedValue.ToString();
+
+            favorite.routeComboIndex = routeComboBox.SelectedIndex;
+            favorite.dirComboIndex = directionComboBox.SelectedIndex;
+            favorite.stopComboIndex = stopsComboBox.SelectedIndex;
+            int contactid = UpdateDetails(favorite.Route, favorite.Dir, favorite.Stop);
+            // return the cid if this exists or null if it doesn't        }
+            return contactid;
+        }
     }
 }

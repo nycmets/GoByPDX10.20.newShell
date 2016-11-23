@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace GoByPDX
 {
@@ -21,6 +22,22 @@ namespace GoByPDX
             }
             return outItem;
         }
+
+        public static ComboBox comboSelection(ComboBox combo1, ComboBox combo2)
+        {
+            ComboBox outItem = null;
+            if (combo1.SelectedValue != null)
+            {
+                outItem = combo1;
+            }
+            else if (combo2.SelectedValue != null)
+            {
+                outItem = combo2;
+            }
+            return outItem;
+        }
+
+
 
         public static object PopulateComboIndex(object combo1, object combo2)
         {

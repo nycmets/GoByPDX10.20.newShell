@@ -63,8 +63,8 @@ namespace GoByPDX
         public App()
         {
             //Check the theme
-            var isDark = Application.Current.RequestedTheme == ApplicationTheme.Dark;
-            lastState.isDark = isDark;
+            //var isDark = Application.Current.RequestedTheme == ApplicationTheme.Dark;
+            //lastState.isDark = isDark;
             //this.RequestedTheme = (ApplicationTheme)ElementTheme.Default;
             this.RequestedTheme = Application.Current.RequestedTheme;
             this.InitializeComponent();

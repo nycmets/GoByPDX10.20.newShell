@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using System.Diagnostics;
+using GoByPDX.ViewModels;
 
 namespace GoByPDX
 {
@@ -105,10 +106,39 @@ namespace GoByPDX
                 App.lastState.routeDir = routeDir;
             }
         }
-        
+
+        public bool showNextArrivals(ComboBox routeComboBox, ComboBox dirComboBox, ComboBox stopsComboBox)
+        {
+            string routeID = "";
+            var routeClass = App.routeListViewModel.routes.Where(e => String.Equals(e.desc, routeComboBox.SelectedValue.ToString())).Select(ret2 => ret2);
+
+            foreach (var ret in routeClass) { routeID = ret.route; }
+
+            if (stopsComboBox.SelectedValue.ToString() != "" && stopsComboBox.SelectedValue.ToString() != null)
+            {
+                string locIDs = "";
+                var stopClass = App.routeListViewModel.stops.Where(e => String.Equals(e.desc, stopsComboBox.SelectedValue)).Select(ret2 => ret2);
+
+                foreach (var ret in stopClass) { locIDs = ret.LocID; }
+                loadNextArrivals(locIDs, routeID);
+            }
+            
+            //TODO CHeck the favorite star and see if route is favorite
+            bool toggleState = false;
+            string Route = routeComboBox.SelectedValue.ToString();
+            string Dir = dirComboBox.SelectedValue.ToString();
+            string Stop = stopsComboBox.SelectedValue.ToString();
+            favoritesListViewModel updateSQL = new favoritesListViewModel();
+            int contactid = updateSQL.UpdateDetails(Route, Dir, Stop);
+            if (contactid != -1)
+            {
+                toggleState = true;
+            }
+            return toggleState;
+        }
 
         // Load the Next Arrivals
-        public void loadNextArrivals(string locIDs, string routeID)
+        private void loadNextArrivals(string locIDs, string routeID)
         {
             string urlString_arrivalInfo = "http://developer.trimet.org/ws/v2/arrivals/locIDs/" + locIDs + "/json/false/arrivals/4/appID/7BCBE4BB29666DDCBB7D73113";
             Uri uri_arrivals = new Uri(urlString_arrivalInfo);

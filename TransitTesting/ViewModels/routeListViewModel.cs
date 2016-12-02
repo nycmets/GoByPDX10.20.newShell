@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using System.Diagnostics;
 using GoByPDX.ViewModels;
+using System.Reflection;
 
 namespace GoByPDX
 {
@@ -24,10 +25,15 @@ namespace GoByPDX
         public int dirComboIndex { get; set; }
         public int stopComboIndex { get; set; }
 
-        public List<RouteInfo> routes;
+        public List<dynamic> routes;
         public List<DirectionInfo> directions;
-        public List<StopInfo> stops;
-        public List<ArrivalInfo> arrivals;
+        public List<dynamic> stops;
+        public List<dynamic> arrivals;
+
+        //public List<RouteInfo> routes;
+        //public List<DirectionInfo> directions;
+        //public List<StopInfo> stops;
+        //public List<ArrivalInfo> arrivals;
 
         public ObservableCollection<string> bindingRouteListItems = new ObservableCollection<string>();
         public ObservableCollection<string> bindingStopListItems = new ObservableCollection<string>();
@@ -58,8 +64,30 @@ namespace GoByPDX
                 string urlString_routes = "https://developer.trimet.org/ws/V1/routeConfig/dir/true/appID/7BCBE4BB29666DDCBB7D73113";
                 Uri uri_routes = new Uri(urlString_routes);
 
-                Task<List<RouteInfo>> returnRouteInfoListTask = Task.Run(() => loadXML_routes(uri_routes));
-                routes = returnRouteInfoListTask.Result;
+                Task<List<RouteInfo>> returnRouteInfoListTask2 = Task.Run(() => loadXML_routes(uri_routes));
+            RouteInfo classForXML = new RouteInfo();
+            //asdf
+            // Remember Order matters, xmlreader will read to the first element of this dict
+            Dictionary<string, string> topProps = new Dictionary<string, string>();
+            topProps["route"] = "route";
+            topProps["desc"] = "desc";
+
+            // Remember Order matters, xmlreader will read to the first element of this dict
+            Dictionary<string, string> lowerProps = new Dictionary<string, string>();
+            lowerProps["dir"] = "dir";
+            lowerProps["dirDesc"] = "desc";
+
+            List<string> xmlNode_l = new List<string>() { "route", "dir", "dir" };
+
+            Task<List<dynamic>> returnRouteInfoListTask = Task.Run(() => loadXML(uri_routes, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
+            string test = Task.CompletedTask.ToString();
+            //var routes = returnRouteInfoListTask.
+            //  var charge = ObjDB.SelectQuert("tblchargemaster").Select(CastDynamicTo<tblchargemaster>)
+            // var test = returnRouteInfoListTask.
+            //List<string> listString = listObject.Cast<string>().ToList();
+            //List<RouteInfo> routeList = returnRouteInfoListTask.Cast<RouteInfo>().ToList();
+            routes = returnRouteInfoListTask.Result;
+            //routes = returnRouteInfoListTask2.Result;
 
                 foreach (RouteInfo routeInfo in routes)
                 {
@@ -95,7 +123,28 @@ namespace GoByPDX
                 {
                     stops.Clear();
                 }
-                Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
+                //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
+                //stops = returnStopInfoListTask.Result;
+
+                Dictionary<string, string> topProps = new Dictionary<string, string>();
+                topProps["dir"] = "null";
+
+                // Remember Order matters, xmlreader will read to the first element of this dict
+                Dictionary<string, string> lowerProps = new Dictionary<string, string>();
+
+                lowerProps["desc"] = "desc";
+                lowerProps["Lat"] = "lat";
+                lowerProps["Lng"] = "lng";
+                lowerProps["LocID"] = "locid";
+                List<string> xmlNode_l = new List<string>() { "route", "stop", "stop" };
+
+                StopInfo classForXML = new StopInfo();
+
+                Task<List<dynamic>> returnStopInfoListTask = Task.Run(() => loadXML(uri_stops, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
+                //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
+                string test = Task.CompletedTask.ToString();
+
+                //stops = returnStopInfoListTask.Result;
                 stops = returnStopInfoListTask.Result;
                 stopList.Clear();
                 foreach (StopInfo stopInfo in stops)
@@ -144,7 +193,40 @@ namespace GoByPDX
             Uri uri_arrivals = new Uri(urlString_arrivalInfo);
             //Make this a simple list of times return, no need for class info
             Task<List<ArrivalInfo>> returnArrivalInfoListTask = Task.Run(() => loadXML_arrivals(uri_arrivals));
-            arrivals = returnArrivalInfoListTask.Result;
+
+
+
+            Dictionary<string, string> topProps = new Dictionary<string, string>();
+            topProps["lat"] = "lat";
+            topProps["lng"] = "lng";
+            topProps["desc"] = "desc";
+
+
+            //// Remember Order matters, xmlreader will read to the first element of this dict
+            Dictionary<string, string> lowerProps = new Dictionary<string, string>();
+            
+            lowerProps["fullSign"] = "fullSign";
+            lowerProps["scheduled"] = "scheduled";
+            lowerProps["vehicleID"] = "vehicleID";
+            lowerProps["estimated"] = "estimated";
+            lowerProps["locid"] = "locid";
+            lowerProps["route"] = "route";
+
+
+            List<string> xmlNode_l = new List<string>() { "location", "arrival", "arrival" };
+
+            ArrivalInfo classForXML = new ArrivalInfo();
+
+            Task<List<dynamic>> returnArrivalInfoListTask2 = Task.Run(() => loadXML(uri_arrivals, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
+            //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
+            //string test = Task.CompletedTask.ToString();
+
+            //stops = returnStopInfoListTask.Result;
+            //List<dynamic> stops2 = returnStopInfoListTask2.Result;
+
+
+
+            arrivals = returnArrivalInfoListTask2.Result;
             arrivalList.Clear();
             foreach (ArrivalInfo arrivalInfo in arrivals)
             {
@@ -158,47 +240,58 @@ namespace GoByPDX
             }
         }
 
-        // Load up the Routes Class
-        async private Task<List<RouteInfo>> loadXML_routes(Uri uri)
-        {
-            List<RouteInfo> routeInfoList = new List<RouteInfo>();
 
+
+        async private Task<List<dynamic>> loadXML(Uri uri, Type classType, Dictionary<string, string> topProps, Dictionary<string, string> lowerProps, List<string> xmlNode_l)
+        {
+            List<dynamic> routeInfoList = new List<dynamic>();
             try
             {
                 var client = new HttpClient();
                 var stream = await client.GetStreamAsync(uri);
                 XmlReader reader = XmlReader.Create(stream);
-                //reader.ReadToFollowing("route");
 
                 while (reader.Read())
                 {
-                    string routeNum = "";
-                    string routeDesc = "";
-
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (reader.HasAttributes && reader.Name == "route")
+                        if (reader.HasAttributes && reader.Name == xmlNode_l[0])
                         {
                             //Debug.WriteLine("Outer Reader.LocalName: " + reader.LocalName);
 
                             //Debug.WriteLine("Outer Reader.Name: " + reader.Name);
-                            //TODO Update these for my dir
-                            //reader.ReadToFollowing("route");
-                            routeNum = reader.GetAttribute("route");
-                            routeDesc = reader.GetAttribute("desc");
-                            if (reader.ReadToDescendant("dir"))
+
+                            Dictionary<string, string> topPropVals = new Dictionary<string, string>();
+                            foreach (string classPropName in topProps.Keys)
+                            {
+                                topPropVals.Add(classPropName, reader.GetAttribute(topProps[classPropName]));
+                                //Debug.WriteLine(classPropName + ": " + reader.GetAttribute(topProps[classPropName]));
+                            }
+
+                            if (reader.ReadToFollowing(xmlNode_l[1]))
                             {
                                 do
                                 {
-                                    RouteInfo routeInfo = new RouteInfo();
-  
-                                    routeInfo.desc = routeDesc;
-                                    routeInfo.route = routeNum;
-                                    routeInfo.dir = reader.GetAttribute("dir");
-                                    routeInfo.dirDesc = reader.GetAttribute("desc");
-                                    routeInfoList.Add(routeInfo);
-                                } while (reader.ReadToNextSibling("dir"));
+                                    //Debug.WriteLine("Outer Reader.LocalName: " + reader.LocalName);
 
+                                    object routeInfo = Activator.CreateInstance(classType);
+
+                                    foreach (string classPropName in topPropVals.Keys)
+                                    {
+                                        PropertyInfo prop = classType.GetProperty(classPropName);
+                                        prop.SetValue(routeInfo, topPropVals[classPropName]);
+                                        //Debug.WriteLine(classPropName + ": " + topPropVals[classPropName]);
+                                    }
+
+                                    foreach (string classPropName in lowerProps.Keys)
+                                    {
+                                        PropertyInfo prop = classType.GetProperty(classPropName);
+                                        prop.SetValue(routeInfo, reader.GetAttribute(lowerProps[classPropName]));
+                                        //Debug.WriteLine(classPropName + ": " + reader.GetAttribute(lowerProps[classPropName]));
+                                    }
+                                    
+                                    routeInfoList.Add(routeInfo);
+                                } while (reader.ReadToNextSibling(xmlNode_l[2]));
                             }
                         }
                     }
@@ -209,99 +302,6 @@ namespace GoByPDX
                 //routeList. = "EXCEPTION";
             }
             return routeInfoList;
-        }
-
-        //Load up the Stops For the selected Route Class
-        async private Task<List<StopInfo>> loadXML_stops(Uri uri)
-        {
-            List<StopInfo> stopInfoList = new List<StopInfo>();
-
-            try
-            {
-                var client = new HttpClient();
-                var stream = await client.GetStreamAsync(uri);
-                XmlReader reader = XmlReader.Create(stream);
-
-                string dir = "";
-                string dirDesc = "";
-
-                //reader.ReadToFollowing("stop");
-
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        if (reader.HasAttributes && reader.Name == "stop")
-                        {
-                            StopInfo stopInfo = new StopInfo();
-                            stopInfo.desc = reader.GetAttribute("desc");
-                            stopInfo.Lng = reader.GetAttribute("lng");
-                            stopInfo.Lat = reader.GetAttribute("lat");
-                            stopInfo.LocID = reader.GetAttribute("locid");
-                            stopInfoList.Add(stopInfo);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //routeList = "EXCEPTION";
-            }
-            return stopInfoList;
-        }
-
-        //Load up the Arrivals For the selected Route Class
-        async private Task<List<ArrivalInfo>> loadXML_arrivals(Uri uri)
-        {
-            List<ArrivalInfo> arrivalInfoList = new List<ArrivalInfo>();
-
-            try
-            {
-                var client = new HttpClient();
-                var stream = await client.GetStreamAsync(uri);
-                XmlReader reader = XmlReader.Create(stream);
-
-                string lat = "";
-                string lng = "";
-                string desc = "";
-
-
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        if (reader.HasAttributes && reader.GetAttribute("lng") != null)
-                        {
-                            lat = reader.GetAttribute("lat");
-                            lng = reader.GetAttribute("lng");
-                            desc = reader.GetAttribute("desc");
-                        }
-
-                        if (reader.HasAttributes && reader.GetAttribute("fullSign") != null)
-                        {
-                            ArrivalInfo arrivalInfo = new ArrivalInfo();
-
-                            arrivalInfo.lng = lng;
-                            arrivalInfo.lat = lat;
-                            arrivalInfo.desc = desc;
-
-                            arrivalInfo.fullSign = reader.GetAttribute("fullSign");
-                            arrivalInfo.route = reader.GetAttribute("route");
-                            arrivalInfo.scheduled = reader.GetAttribute("scheduled");
-                            arrivalInfo.vehicleID = reader.GetAttribute("vehicleID");
-                            arrivalInfo.estimated = reader.GetAttribute("estimated");
-                            arrivalInfo.estimated = reader.GetAttribute("locid");
-
-                            arrivalInfoList.Add(arrivalInfo);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //routeList = "EXCEPTION";
-            }
-            return arrivalInfoList;
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

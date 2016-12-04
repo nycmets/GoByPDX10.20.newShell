@@ -59,15 +59,10 @@ namespace GoByPDX
 
         public routeListViewModel()
         {
-            //if (App.routeListViewModel.routes == null)
-            //{
-                string urlString_routes = "https://developer.trimet.org/ws/V1/routeConfig/dir/true/appID/7BCBE4BB29666DDCBB7D73113";
-                Uri uri_routes = new Uri(urlString_routes);
+            string urlString_routes = "https://developer.trimet.org/ws/V1/routeConfig/dir/true/appID/7BCBE4BB29666DDCBB7D73113";
+            Uri uri_routes = new Uri(urlString_routes);
 
-                Task<List<RouteInfo>> returnRouteInfoListTask2 = Task.Run(() => loadXML_routes(uri_routes));
             RouteInfo classForXML = new RouteInfo();
-            //asdf
-            // Remember Order matters, xmlreader will read to the first element of this dict
             Dictionary<string, string> topProps = new Dictionary<string, string>();
             topProps["route"] = "route";
             topProps["desc"] = "desc";
@@ -81,22 +76,15 @@ namespace GoByPDX
 
             Task<List<dynamic>> returnRouteInfoListTask = Task.Run(() => loadXML(uri_routes, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
             string test = Task.CompletedTask.ToString();
-            //var routes = returnRouteInfoListTask.
-            //  var charge = ObjDB.SelectQuert("tblchargemaster").Select(CastDynamicTo<tblchargemaster>)
-            // var test = returnRouteInfoListTask.
-            //List<string> listString = listObject.Cast<string>().ToList();
-            //List<RouteInfo> routeList = returnRouteInfoListTask.Cast<RouteInfo>().ToList();
             routes = returnRouteInfoListTask.Result;
-            //routes = returnRouteInfoListTask2.Result;
 
-                foreach (RouteInfo routeInfo in routes)
+            foreach (RouteInfo routeInfo in routes)
+            {
+                if (!bindingRouteListItems.Contains(routeInfo.desc))
                 {
-                    if (!bindingRouteListItems.Contains(routeInfo.desc))
-                    {
-                        bindingRouteListItems.Add(routeInfo.desc);
-                    }
+                    bindingRouteListItems.Add(routeInfo.desc);
                 }
-            //}
+            }
         }
 
         public void loadDirInfo(string description)
@@ -123,13 +111,10 @@ namespace GoByPDX
                 {
                     stops.Clear();
                 }
-                //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
-                //stops = returnStopInfoListTask.Result;
 
                 Dictionary<string, string> topProps = new Dictionary<string, string>();
                 topProps["dir"] = "null";
 
-                // Remember Order matters, xmlreader will read to the first element of this dict
                 Dictionary<string, string> lowerProps = new Dictionary<string, string>();
 
                 lowerProps["desc"] = "desc";
@@ -141,10 +126,8 @@ namespace GoByPDX
                 StopInfo classForXML = new StopInfo();
 
                 Task<List<dynamic>> returnStopInfoListTask = Task.Run(() => loadXML(uri_stops, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
-                //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
                 string test = Task.CompletedTask.ToString();
 
-                //stops = returnStopInfoListTask.Result;
                 stops = returnStopInfoListTask.Result;
                 stopList.Clear();
                 foreach (StopInfo stopInfo in stops)
@@ -192,17 +175,12 @@ namespace GoByPDX
             string urlString_arrivalInfo = "http://developer.trimet.org/ws/v2/arrivals/locIDs/" + locIDs + "/json/false/arrivals/4/appID/7BCBE4BB29666DDCBB7D73113";
             Uri uri_arrivals = new Uri(urlString_arrivalInfo);
             //Make this a simple list of times return, no need for class info
-            Task<List<ArrivalInfo>> returnArrivalInfoListTask = Task.Run(() => loadXML_arrivals(uri_arrivals));
-
-
 
             Dictionary<string, string> topProps = new Dictionary<string, string>();
             topProps["lat"] = "lat";
             topProps["lng"] = "lng";
             topProps["desc"] = "desc";
 
-
-            //// Remember Order matters, xmlreader will read to the first element of this dict
             Dictionary<string, string> lowerProps = new Dictionary<string, string>();
             
             lowerProps["fullSign"] = "fullSign";
@@ -212,21 +190,12 @@ namespace GoByPDX
             lowerProps["locid"] = "locid";
             lowerProps["route"] = "route";
 
-
             List<string> xmlNode_l = new List<string>() { "location", "arrival", "arrival" };
 
             ArrivalInfo classForXML = new ArrivalInfo();
+            Task<List<dynamic>> returnArrivalInfoListTask = Task.Run(() => loadXML(uri_arrivals, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
 
-            Task<List<dynamic>> returnArrivalInfoListTask2 = Task.Run(() => loadXML(uri_arrivals, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
-            //Task<List<StopInfo>> returnStopInfoListTask = Task.Run(() => loadXML_stops(uri_stops));
-            //string test = Task.CompletedTask.ToString();
-
-            //stops = returnStopInfoListTask.Result;
-            //List<dynamic> stops2 = returnStopInfoListTask2.Result;
-
-
-
-            arrivals = returnArrivalInfoListTask2.Result;
+            arrivals = returnArrivalInfoListTask.Result;
             arrivalList.Clear();
             foreach (ArrivalInfo arrivalInfo in arrivals)
             {
@@ -258,7 +227,6 @@ namespace GoByPDX
                         if (reader.HasAttributes && reader.Name == xmlNode_l[0])
                         {
                             //Debug.WriteLine("Outer Reader.LocalName: " + reader.LocalName);
-
                             //Debug.WriteLine("Outer Reader.Name: " + reader.Name);
 
                             Dictionary<string, string> topPropVals = new Dictionary<string, string>();

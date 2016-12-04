@@ -295,7 +295,7 @@ namespace GoByPDX
         /// Public method to allow pages to open SplitView's pane.
         /// Used for custom app shortcuts like navigating left from page's left-most item
         /// </summary>
-        public void OpenNavePane()
+        public void OpenNavPane()
         {
             TogglePaneButton.IsChecked = true;
             NavPaneDivider.Visibility = Visibility.Visible;

@@ -99,7 +99,6 @@
     <Compile Include="Controls\NavMenuListView.cs" />
     <Compile Include="Dto\BaseDto.cs" />
     <Compile Include="Dto\Favorites.cs" />
-    <Compile Include="funcsNonStatic.cs" />
     <Compile Include="functions.cs" />
     <Compile Include="Models\lastState.cs" />
     <Compile Include="Models\ArrivalInfo.cs" />

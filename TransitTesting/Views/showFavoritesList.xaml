@@ -7,53 +7,57 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <!--<ListView x:Name="cListView" HorizontalAlignment="Stretch" Margin="4" VerticalAlignment="Stretch" FontSize="20"
-                  ItemsSource="{Binding Path=junk}" FontWeight="Bold"/>-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock Name="cTitleBox" HorizontalAlignment="Stretch" TextWrapping="Wrap"  TextAlignment="Center"
+                   VerticalAlignment="Center" FontSize="44" FontFamily="Calibri" FontStyle="Italic" 
+                           FontWeight="Bold" Text="Favorites"/>
+        </Grid>
 
-        <!--<ComboBox x:Name="cRouteComboBox" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                  SelectedItem="{Binding dirList, UpdateSourceTrigger=PropertyChanged}"
-                  ItemsSource="{Binding Path=routeList, Mode=TwoWay}" SelectionChanged="showDirInfo"/-->
-        <ListView 
+        <Grid Grid.Row="1" Style="{StaticResource cGridStyle}">
+            <ListView 
                 Name="LV1" 
                 ItemsSource="{Binding Path=favList, Mode=TwoWay}" 
-                Background="CadetBlue" Grid.ColumnSpan="2" SelectionChanged="favoriteSelected">
-            <ListView.Header>
-                <Grid Name="HeaderGrid" Visibility="Collapsed">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="UserID" />
-                    <TextBlock Grid.Column="1" Text="UserName"/>
-                </Grid>
-            </ListView.Header>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Background="YellowGreen" Width="auto" HorizontalAlignment="Stretch" Holding="favorite_holding">
-                        <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem FontSize="20" Text="Delete Favorite" Tapped="deleteFavorite" />
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
+                Grid.ColumnSpan="2" SelectionChanged="favoriteSelected">
+                <ListView.Header>
+                    <Grid Name="HeaderGrid" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding Route}" />
-                        <TextBlock Grid.Column="1" Text="{Binding Dir}" />
-                        <TextBlock Grid.Column="2" Text="{Binding Stop}"/>
-
+                        <TextBlock Grid.Column="0" Text="UserID" />
+                        <TextBlock Grid.Column="1" Text="UserName"/>
                     </Grid>
-                    
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                </ListView.Header>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="YellowGreen" Width="auto" HorizontalAlignment="Stretch" Holding="favorite_holding">
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem FontSize="20" Text="Delete Favorite" Tapped="deleteFavorite" />
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Route}" />
+                            <TextBlock Grid.Column="1" Text="{Binding Dir}" />
+                            <TextBlock Grid.Column="2" Text="{Binding Stop}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Page>

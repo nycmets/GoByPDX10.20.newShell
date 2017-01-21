@@ -7,6 +7,7 @@
     xmlns:System="using:System"
     x:Class="GoByPDX.Views.showRouteList"
     mc:Ignorable="d">
+    
 
     <Grid>
         <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Collapsed" Style="{StaticResource GridStyle}">
@@ -120,5 +121,28 @@
                 </Grid>
             </Grid>
         </Grid>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="TabularLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="showRouteTabularView.Visibility" Value="Visible"/>
+                        <Setter Target="showRouteColumnarView.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="ColumnarLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="showRouteTabularView.Visibility" Value="Collapsed"/>
+                        <Setter Target="showRouteColumnarView.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
+    
 </Page>

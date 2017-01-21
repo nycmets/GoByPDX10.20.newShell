@@ -38,7 +38,7 @@ namespace GoByPDX.Views
     /// </summary>
     public sealed partial class showRouteList : Page
     {
-        funcsNonStatic funcsNonStatic = new GoByPDX.funcsNonStatic();
+        //funcsNonStatic funcsNonStatic = new GoByPDX.funcsNonStatic();
 
         async private void messageFunc()
         {

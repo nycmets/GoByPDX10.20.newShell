@@ -17,6 +17,8 @@ using Windows.UI;
 using GoByPDX.Controls;
 using GoByPDX.Views;
 using Windows.UI.Xaml.Automation;
+using System.Diagnostics;
+
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -226,13 +228,38 @@ namespace GoByPDX
             }
         }
 
-        private void RefreshRequested(Frame frame, object sourcePageType)
+        public void RefreshRequested(Frame frame, object sourcePageType)
         {
-            frame.Navigate(frame.SourcePageType);
-            int count = frame.BackStack.Count;
-            frame.BackStack.RemoveAt(frame.BackStack.Count - 1);
-            int count2 = frame.BackStack.Count;
-        }
+            // Find what page you are on, if on the main page, send in the old stuff, if on the transit page go to the new func
+            Debug.WriteLine("NSP SPT: " + sourcePageType.ToString());
+            Debug.WriteLine("NSP name: " + frame.SourcePageType.Name.ToString());
+
+            if (frame.SourcePageType.Name.Equals("showRouteList"))
+            {
+                //Windows.Services.NavigationService.Instance.Frame.BackStack.Remove().
+                frame.Navigate(frame.SourcePageType);
+                int count = frame.BackStack.Count;
+                frame.BackStack.RemoveAt(frame.BackStack.Count - 1);
+                int count2 = frame.BackStack.Count;
+            }
+            if (frame.SourcePageType.Name.Equals("showTransitLocation"))
+            {
+                //Refill out the form
+                
+                showTransitLocation test = new showTransitLocation();
+                test.mapRefreshButton();
+            }
+
+
+    //frame.Name.source
+    //object test = sourcePageType.GetType();
+
+    //Services.NavigationService.Instance.Frame.BackStack.Remove().
+    //frame.Navigate(frame.SourcePageType);
+    //int count = frame.BackStack.Count;
+    //frame.BackStack.RemoveAt(frame.BackStack.Count - 1);
+    //int count2 = frame.BackStack.Count;
+}
 
         /// <summary>
         /// Ensures the nav menu reflects reality when navigation is triggered outside of

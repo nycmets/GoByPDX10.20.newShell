@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Square150x150Logo.scale-100.png" />
+    <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Images\PDX.jpg" />
     <Content Include="Images\StJohns.jpg" />
     <Content Include="Images\StJohns_1024.jpg" />
@@ -184,8 +185,17 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
     <SDKReference Include="SQLite.UWP.2015, Version=3.15.0">
       <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
+    <SDKReference Include="WindowsMobile, Version=10.0.10586.0">
+      <Name>Windows Mobile Extensions for the UWP %28WindowsMobile, Version=10.0.10586.0%29</Name>
+    </SDKReference>
+    <SDKReference Include="WindowsMobile, Version=10.0.14393.0">
+      <Name>Windows Mobile Extensions for the UWP %28WindowsMobile, Version=10.0.14393.0%29</Name>
     </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

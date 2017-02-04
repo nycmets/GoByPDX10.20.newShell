@@ -35,6 +35,7 @@ namespace GoByPDX
         public string vehicleIDprev { get; set; }
         public Geopoint vehiclePointGP { get; set; }
         public string scheduled { get; set; }
+        public string estimated { get; set; }
         public string vehicleID { get; set; }
 
         public string stopLng { get; set; }
@@ -43,8 +44,7 @@ namespace GoByPDX
 
         public transitLocationViewModel()
         {
-            // Put all the crap from the showTransitLocation here
-
+//NSP 1/21 - All of this needs to move to a function I can call from the refresh key
             //string vehicleTime = e.AddedItems[0].ToString();
             Debug.WriteLine("NSP transitSel: " + App.lastState.vehicleScheduledTime);
 
@@ -55,14 +55,25 @@ namespace GoByPDX
             stopName = "";
             //string scheduled = "";
             scheduled = "";
+            estimated = "";
             //var vehicleClass = App.routeListViewModel.arrivals.Where(e => String.Equals(e.scheduled, source.Parameter)).Select(ret => ret);
             var vehicleClass = App.routeListViewModel.arrivals.Where(e => String.Equals(e.scheduled, App.lastState.vehicleScheduledTime)).Select(ret => ret);
 
 
             foreach (var ret in vehicleClass)
             {
+                estimated = "";
                 string[] schList = ret.scheduled.Split();
                 scheduled = schList[1] + " " + schList[2];
+                string[] estList = ret.estimated.Split();
+                if (estList.Length < 2)
+                {
+                    estimated = "Trimet Not Providing Estimated Arrival Times   ";
+                } else
+                {
+                    estimated = estList[1] + " " + estList[2];
+                }
+
                 vehicleID = ret.vehicleID;
                 stopLng = ret.lng;
                 stopLat = ret.lat;

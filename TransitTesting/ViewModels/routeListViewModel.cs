@@ -30,11 +30,7 @@ namespace GoByPDX
         public List<dynamic> stops;
         public List<dynamic> arrivals;
 
-        //public List<RouteInfo> routes;
-        //public List<DirectionInfo> directions;
-        //public List<StopInfo> stops;
-        //public List<ArrivalInfo> arrivals;
-
+       
         public ObservableCollection<string> bindingRouteListItems = new ObservableCollection<string>();
         public ObservableCollection<string> bindingStopListItems = new ObservableCollection<string>();
         public ObservableCollection<string> bindingDirListItems = new ObservableCollection<string>();
@@ -50,10 +46,7 @@ namespace GoByPDX
         public ObservableCollection<string> stopList { get { return bindingStopListItems; } set { bindingStopListItems = value; this.OnPropertyChanged("stopList"); } }
         public ObservableCollection<string> arrivalList { get { return bindingArrivalListItems; } set { this.OnPropertyChanged("arrivalList"); } }
 
-        //public List<RouteInfo> routesClass { get { return routes; } set { return; } }
-        //public List<DirectionInfo> directionClass { get { return directions; } set { return; } }
-        //public List<StopInfo>  stopsClass { get { return stops; } set { return; } }
-        //public List<ArrivalInfo> arrivalsClass { get { return arrivals; } set { return; } }
+      
 
         #endregion 
 

@@ -111,7 +111,7 @@ namespace GoByPDX
                 // Set the default language
                 shell.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
 
-                //shell.AppFrame.NavigationFailed += OnNavigationFailed;
+                shell.AppFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

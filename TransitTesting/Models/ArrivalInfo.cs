@@ -35,7 +35,26 @@ namespace GoByPDX
         public string desc { get; set; }
 
 
-        public string estimated { get; set; }
+        //public string estimated { get; set; }
+
+        private string _estimated = "";
+        public string estimated
+        {
+            get { return this._estimated; }
+            set
+            {
+                //this._scheduled = value; 
+                if (value != null)
+                {
+                    double doubSch = Convert.ToDouble(value.Remove(value.Length - 3));
+                    DateTime dt = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+                    dt = dt.AddSeconds(doubSch).ToLocalTime();
+                    this._estimated = dt.ToString();
+                }
+            }
+        }
+
         public string tripID { get; set; }
     }
 }

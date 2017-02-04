@@ -27,6 +27,8 @@ using Windows.Storage;
 using SQLite.Net.Platform.WinRT;
 using System.Collections.ObjectModel;
 using GoByPDX.ViewModels;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
@@ -64,6 +66,11 @@ namespace GoByPDX.Views
             object test = await messageDialog.ShowAsync();
         }
 
+        async private void progressRingAsync()
+        {
+           
+        }
+
         private void CommandInvokedHandler(IUICommand command)
         {
             this.Frame.Navigate(typeof(showRouteList));
@@ -76,6 +83,8 @@ namespace GoByPDX.Views
             return internet;
         }
 
+
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);             //not needed, base method is empty and does nothing
@@ -84,6 +93,13 @@ namespace GoByPDX.Views
             {
                 DataContext = null;                //important part, whenever you navigate, refreshes the    ViewModel - no deletion, just resetting of the DataContext, so the page won't get stuck
                 DataContext = App.routeListViewModel;      //and finally the resetting  
+                                                           //loadingScreen loadScreen = new loadingScreen();
+                                                           //SplashScreen mySplash
+                                                           //LaunchActivatedEventArgs appArgs = LaunchActivatedEventArgs;  
+
+                //ProgressR.IsActive = true;
+                //progressRingAsync();
+
                 if (showRouteTabularView.Visibility.ToString() == "Visible")
                 {
                     routeComboBox.SelectedIndex = App.routeListViewModel.routeComboIndex;
@@ -96,6 +112,7 @@ namespace GoByPDX.Views
                     cDirectionComboBox.SelectedIndex = App.routeListViewModel.dirComboIndex;
                     cStopsComboBox.SelectedIndex = App.routeListViewModel.stopComboIndex;
                 }
+                //LoadingIndicator.IsActive = false;
             }
             else
             {
@@ -169,15 +186,18 @@ namespace GoByPDX.Views
                 App.lastState.vehicleScheduledTime = vehicleTime;
 
                 string vehicleID = "";
+                string estimatedTime = "";
                 var vehicleClass = App.routeListViewModel.arrivals.Where(e2 => String.Equals(e2.scheduled, vehicleTime)).Select(ret => ret);
 
                 foreach (var ret in vehicleClass)
                 {
                     vehicleID = ret.vehicleID;
+                    estimatedTime = ret.estimated;
                 }
 
                 App.lastState.vehicleID = vehicleID;
                 App.lastState.vehicleScheduledTime = vehicleTime;
+                App.lastState.vehicleEstimatedTime = estimatedTime;
                 this.Frame.Navigate(typeof(showTransitLocation), vehicleTime);
                 App.routeListViewModel.routeComboIndex = Convert.ToInt32(functions.PopulateComboIndex(routeComboBox.SelectedIndex, cRouteComboBox.SelectedIndex));
                 App.routeListViewModel.dirComboIndex = Convert.ToInt32(functions.PopulateComboIndex(directionComboBox.SelectedIndex, cDirectionComboBox.SelectedIndex));

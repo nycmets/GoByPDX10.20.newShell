@@ -7,10 +7,12 @@
     xmlns:System="using:System"
     x:Class="GoByPDX.Views.showRouteList"
     mc:Ignorable="d">
-    
 
     <Grid>
+        <ProgressRing x:Name="ProgressIndicator" IsActive="True"/>
+
         <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Collapsed" Style="{StaticResource GridStyle}">
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="*"/>

@@ -101,11 +101,11 @@ namespace GoByPDX.Controls
                 var lvi = (ListViewItem)this.ContainerFromIndex(i);
                 if (i != index)
                 {
-                    lvi.IsSelected = false;
+                   //NSP UPDATE lvi.IsSelected = false;
                 }
                 else if (i == index)
                 {
-                    lvi.IsSelected = true;
+                  //NSP UPDATE  lvi.IsSelected = true;
                 }
             }
         }

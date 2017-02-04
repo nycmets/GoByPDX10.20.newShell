@@ -18,6 +18,7 @@ using GoByPDX.Controls;
 using GoByPDX.Views;
 using Windows.UI.Xaml.Automation;
 using System.Diagnostics;
+using Windows.UI.Popups;
 
 
 
@@ -88,6 +89,7 @@ namespace GoByPDX
                 });
 
             SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
+            //SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
             NavMenuList.ItemsSource = navlist;
@@ -188,6 +190,8 @@ namespace GoByPDX
             {
                 // If not, set the event to handled and go back to the previous page in the app.
                 handled = true;
+                //var messageDialog = new MessageDialog("goingback");
+
                 this.AppFrame.GoBack();
             }
         }
@@ -284,23 +288,23 @@ namespace GoByPDX
                     }
                 }
                 
-                foreach (var i in navlist)
-                {
-                    i.IsSelected = false;
-                }
-                if (item != null)
-                {
-                    item.IsSelected = true;
-                }
+                //foreach (var i in navlist)
+                //{
+                //    i.IsSelected = false;
+                //}
+                //if (item != null)
+                //{
+                //    item.IsSelected = true;
+                //}
 
-                var container = (ListViewItem)NavMenuList.ContainerFromItem(item);
+                //var container = (ListViewItem)NavMenuList.ContainerFromItem(item);
 
-                // While updating the selection state of the item prevent it from taking keyboard focus.  If a
-                // user is invoking the back button via the keyboard causing the selected nav menu item to change
-                // then focus will remain on the back button.
-                if (container != null) container.IsTabStop = false;
-                NavMenuList.SetSelectedItem(container);
-                if (container != null) container.IsTabStop = true;
+                //// While updating the selection state of the item prevent it from taking keyboard focus.  If a
+                //// user is invoking the back button via the keyboard causing the selected nav menu item to change
+                //// then focus will remain on the back button.
+                //if (container != null) container.IsTabStop = false;
+                //NavMenuList.SetSelectedItem(container);
+                //if (container != null) container.IsTabStop = true;
             }
         }
 

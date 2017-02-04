@@ -12,6 +12,7 @@ namespace GoByPDX
         public int dirComboIndex { get; set; }
         public int stopComboIndex { get; set; }
         public string vehicleScheduledTime { get; set; }
+        public string vehicleEstimatedTime { get; set; }
         public string vehicleID { get; set; }
         public string routeID { get; set; }
         public string routeDir { get; set; }

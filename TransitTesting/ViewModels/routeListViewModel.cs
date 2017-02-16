@@ -35,7 +35,7 @@ namespace GoByPDX
         public ObservableCollection<string> bindingStopListItems = new ObservableCollection<string>();
         public ObservableCollection<string> bindingDirListItems = new ObservableCollection<string>();
         public ObservableCollection<string> bindingArrivalListItems = new ObservableCollection<string>();
-
+        
         List<RouteInfo> returnRouteInfoList = new List<RouteInfo>();
         List<DirectionInfo> returnDirInfoList = new List<DirectionInfo>();
         List<StopInfo> returnStopInfoList = new List<StopInfo>();
@@ -80,7 +80,7 @@ namespace GoByPDX
             }
         }
 
-        public void loadDirInfo(string description)
+        public async Task<bool> loadDirInfo(string description)
         {
             bindingDirListItems.Clear();
             var routeClass = routes.Where(e => String.Equals(e.desc, description)).Select(ret2 => ret2);
@@ -89,15 +89,16 @@ namespace GoByPDX
             {
                 bindingDirListItems.Add(ret.dirDesc);
             }
+            return true;
         }
 
-        public void loadStopInfo(string routeDir, string routeID)
+        public async Task<bool> loadStopInfo(string routeDir, string routeID)
         {
             stopList.Clear();
 
             if (routeDir != "" && routeID != "")
             {
-                Debug.WriteLine("NSP Dir Selected: " + routeDir);
+                //Debug.WriteLine("NSP Dir Selected: " + routeDir);
                 string urlString_stopInfo = "https://developer.trimet.org/ws/V1/routeConfig/route/" + routeID + "/dir/" + routeDir + "/stops/test/appID=7BCBE4BB29666DDCBB7D73113";
                 Uri uri_stops = new Uri(urlString_stopInfo);
                 if (stops != null)
@@ -130,9 +131,10 @@ namespace GoByPDX
                 App.lastState.routeID = routeID;
                 App.lastState.routeDir = routeDir;
             }
+            return true;
         }
 
-        public bool showNextArrivals(ComboBox routeComboBox, ComboBox dirComboBox, ComboBox stopsComboBox)
+        public async Task<bool> showNextArrivals(ComboBox routeComboBox, ComboBox dirComboBox, ComboBox stopsComboBox)
         {
             string routeID = "";
             var routeClass = App.routeListViewModel.routes.Where(e => String.Equals(e.desc, routeComboBox.SelectedValue.ToString())).Select(ret2 => ret2);

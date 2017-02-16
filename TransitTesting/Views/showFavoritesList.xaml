@@ -8,6 +8,7 @@
     mc:Ignorable="d">
 
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
             <RowDefinition Height="*"/>
@@ -19,6 +20,11 @@
         </Grid>
 
         <Grid Grid.Row="1" Style="{StaticResource cGridStyle}">
+            <ProgressRing x:Name="ProgressIndicator"/>
+            <ProgressBar x:Name="loadingBar" Visibility="Collapsed" IsIndeterminate="True" FontSize="30" Canvas.ZIndex="20" Foreground="#FF27D700"/>
+            <!--<Rectangle x:Name="loadingDarkness" Visibility="Visible" Fill="#FF0E0E0E" HorizontalAlignment="Left" Margin="10,10,-78,0" Stroke="Black" VerticalAlignment="Top" Opacity="0.75"/>-->
+            <Rectangle x:Name="loadingDarkness" Visibility="Collapsed" Fill="#FF0E0E0E" Margin="0,0,0,0" Stroke="Black" Opacity="0.75" Canvas.ZIndex="2"/>
+
             <ListView 
                 Name="LV1" 
                 ItemsSource="{Binding Path=favList, Mode=TwoWay}" 

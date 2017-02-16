@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Grid>
-        <ProgressRing x:Name="ProgressIndicator" IsActive="True"/>
+
 
         <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Collapsed" Style="{StaticResource GridStyle}">
 
@@ -57,6 +57,7 @@
             </Grid>
         </Grid>
         <Grid x:Name="showRouteColumnarView" Margin="0,0,0,0" Visibility="Visible">
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="45"/>
@@ -67,6 +68,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="45"/>
                     </Grid.ColumnDefinitions>
+                    
                     <TextBlock Grid.Column="0" Name="cTitleBox" HorizontalAlignment="Stretch" TextWrapping="Wrap"  TextAlignment="Center"
                    VerticalAlignment="Center" FontSize="44" FontFamily="Calibri" FontStyle="Italic" 
                            FontWeight="Bold" Text="GO BY PDX"/>
@@ -83,6 +85,7 @@
 
 
                 <Grid Grid.Row="1" Style="{StaticResource cGridStyle}">
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*"/>
                         <RowDefinition Height="5*"/>
@@ -116,6 +119,8 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="10*"/>
                         </Grid.RowDefinitions>
+                        <ProgressRing x:Name="ProgressIndicator" IsActive="true"/>
+
                         <TextBlock x:Name="cArrivalsTextBox" Grid.Row="0" HorizontalAlignment="Left" TextWrapping="Wrap" Text="  Next Arrivals" VerticalAlignment="Top" Width="243" FontSize="25" FontWeight="Bold" FontStyle="Italic"/>
                         <ListView x:Name="cListView" Grid.Row="1" HorizontalAlignment="Stretch" Margin="4" VerticalAlignment="Stretch" FontSize="20"
                         ItemsSource="{Binding Path=arrivalList}" SelectionChanged="transitSelected" FontWeight="Bold"/>

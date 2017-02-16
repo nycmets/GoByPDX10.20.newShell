@@ -17,6 +17,10 @@ using SQLite.Net;
 using SQLite.Net.Platform.WinRT;
 using GoByPDX.Dto;
 using Windows.Storage;
+using Windows.UI.Popups;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,19 +41,24 @@ namespace GoByPDX.Views
            // this.DataContext = favoritesListViewModel;
         }
 
-        private void favoriteSelected(object sender, SelectionChangedEventArgs e)
+       
+        private async void favoriteSelected(object sender, SelectionChangedEventArgs e)
         {
             Favorites favSelected = LV1.SelectedItem as Favorites;
             var contactid = favSelected.Id;
+
             if (favSelected != null)
             {
-                favoritesListViewModel.populateFavIndexes(contactid);              
-
+                favoritesListViewModel.populateFavIndexes(contactid);
+                loadingBar.IsEnabled = true;
+                loadingBar.Visibility = Visibility.Visible;
+                loadingDarkness.Visibility = Visibility.Visible;
+                await Task.Delay(100);
                 this.Frame.Navigate(typeof(showRouteList));
+               
             }
         }
 
-        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);             //not needed, base method is empty and does nothing

@@ -66,11 +66,6 @@ namespace GoByPDX.Views
             object test = await messageDialog.ShowAsync();
         }
 
-        async private void progressRingAsync()
-        {
-           
-        }
-
         private void CommandInvokedHandler(IUICommand command)
         {
             this.Frame.Navigate(typeof(showRouteList));
@@ -83,9 +78,32 @@ namespace GoByPDX.Views
             return internet;
         }
 
+        private async Task<bool> updateRouteInfo()
+        {
+            bool updated = false;
+            //for (int i = 1; i <= 1000; i++)
+            //{ // print numbers from 1 to 5
+            //    Debug.WriteLine(i);
+            //}
 
+            if (showRouteTabularView.Visibility.ToString() == "Visible")
+            {
+                routeComboBox.SelectedIndex = App.routeListViewModel.routeComboIndex;
+                directionComboBox.SelectedIndex = App.routeListViewModel.dirComboIndex;
+                stopsComboBox.SelectedIndex = App.routeListViewModel.stopComboIndex;
+                updated = true;
+            }
+            else if (showRouteColumnarView.Visibility.ToString() == "Visible")
+            {
+                cRouteComboBox.SelectedIndex = App.routeListViewModel.routeComboIndex;
+                cDirectionComboBox.SelectedIndex = App.routeListViewModel.dirComboIndex;
+                cStopsComboBox.SelectedIndex = App.routeListViewModel.stopComboIndex;
+                updated = true;
+            }
+            return updated;
+        }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        async protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);             //not needed, base method is empty and does nothing
 
@@ -97,28 +115,20 @@ namespace GoByPDX.Views
                                                            //SplashScreen mySplash
                                                            //LaunchActivatedEventArgs appArgs = LaunchActivatedEventArgs;  
 
-                //ProgressR.IsActive = true;
-                //progressRingAsync();
+                // This loads the route information
+                ProgressIndicator.IsActive = true;
+                bool goodReturn = await updateRouteInfo();
+                ProgressIndicator.IsActive = false;
 
-                if (showRouteTabularView.Visibility.ToString() == "Visible")
+                if (goodReturn == false)
                 {
-                    routeComboBox.SelectedIndex = App.routeListViewModel.routeComboIndex;
-                    directionComboBox.SelectedIndex = App.routeListViewModel.dirComboIndex;
-                    stopsComboBox.SelectedIndex = App.routeListViewModel.stopComboIndex;
+                    messageFunc();
                 }
-                else if (showRouteColumnarView.Visibility.ToString() == "Visible")
-                {
-                    cRouteComboBox.SelectedIndex = App.routeListViewModel.routeComboIndex;
-                    cDirectionComboBox.SelectedIndex = App.routeListViewModel.dirComboIndex;
-                    cStopsComboBox.SelectedIndex = App.routeListViewModel.stopComboIndex;
-                }
-                //LoadingIndicator.IsActive = false;
             }
             else
             {
                 messageFunc();
             }
-
         }
 
         public showRouteList()
@@ -127,17 +137,18 @@ namespace GoByPDX.Views
             //this.DataContext = App.routeListViewModel;
         }
 
-        private void showDirInfo(object sender, SelectionChangedEventArgs tmp)
+        private async void showDirInfo(object sender, SelectionChangedEventArgs tmp)
         {
             //this.DataContext = App.routeListViewModel;
 
             string description = "";
             description = functions.myComboVal(routeComboBox.SelectedValue, cRouteComboBox.SelectedValue);
 
-            App.routeListViewModel.loadDirInfo(description);
+            bool descReturned = await App.routeListViewModel.loadDirInfo(description);
+           
         }
 
-        private void showStopInfo(object sender, SelectionChangedEventArgs tmp)
+        private async void showStopInfo(object sender, SelectionChangedEventArgs tmp)
         {
             //Debug.WriteLine("Selected: {0}", tmp.AddedItems[0]);
             //this.DataContext = App.routeListViewModel;
@@ -154,11 +165,11 @@ namespace GoByPDX.Views
                 var routeClassDesc = App.routeListViewModel.routes.Where(e => String.Equals(e.desc, routeDesc)).Select(ret2 => ret2);
                 foreach (var ret in routeClassDesc) { if (ret.dirDesc == routeDirDesc) { routeID = ret.route; routeDir = ret.dir; } }
 
-                App.routeListViewModel.loadStopInfo(routeDir, routeID);
+                bool test = await App.routeListViewModel.loadStopInfo(routeDir, routeID);
             }
         }
 
-        private void showNextArrivals(object sender, SelectionChangedEventArgs tmp)
+        private async void showNextArrivals(object sender, SelectionChangedEventArgs tmp)
         {
             ComboBox routeComboBox_all = functions.comboSelection(routeComboBox, cRouteComboBox);
             ComboBox dirComboBox_all   = functions.comboSelection(directionComboBox, cDirectionComboBox);
@@ -166,7 +177,7 @@ namespace GoByPDX.Views
 
             if (routeComboBox_all != null && dirComboBox_all != null && stopsComboBox_all != null)
             {
-                ToggleFavRouteButton.IsChecked = App.routeListViewModel.showNextArrivals(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
+                ToggleFavRouteButton.IsChecked = await App.routeListViewModel.showNextArrivals(routeComboBox_all, dirComboBox_all, stopsComboBox_all);
             }
             else
             {
@@ -217,8 +228,6 @@ namespace GoByPDX.Views
                 ToggleFavRouteButton.Content = favListVM.FavRouteButtonToggled(ToggleFavRouteButton, routeComboBox_all, dirComboBox_all, stopsComboBox_all);
             }
         }
-
-
     }
 }
 

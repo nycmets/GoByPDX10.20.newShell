@@ -42,11 +42,17 @@ namespace GoByPDX
                     Label = "Routes",
                     DestPage = typeof(showRouteList)
                 },
-                 new NavMenuItem()
+                new NavMenuItem()
                 {
                     Symbol = Symbol.Favorite,
                     Label = "Favorites",
                     DestPage = typeof(showFavoritesList)
+                },
+                new NavMenuItem()
+                {
+                    Symbol = Symbol.Directions,
+                    Label = "Trip Planner",
+                    DestPage = typeof(showTripPlanner)
                 },
                 new NavMenuItem()
                 {

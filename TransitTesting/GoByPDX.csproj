@@ -110,6 +110,7 @@
     <Compile Include="Models\TripPlannerModels\tripLeg.cs" />
     <Compile Include="Models\TripPlannerModels\tripPlanner.cs" />
     <Compile Include="Models\TripPlannerModels\tripPlannerPageFieldsModel.cs" />
+    <Compile Include="Models\TripPlannerModels\tripPlannerResultsViewModel.cs" />
     <Compile Include="NavMenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\RouteInfo.cs" />

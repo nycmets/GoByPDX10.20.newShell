@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoByPDX.Models.TripPlannerModels
 {
-    class tripLeg
+    public class tripLeg
     {
         public string mode { get; set; }
 

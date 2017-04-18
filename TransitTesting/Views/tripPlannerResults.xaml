@@ -7,7 +7,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Visible" Style="{StaticResource GridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="GO BY PDX" VerticalAlignment="Center" FontSize="60" FontFamily="Calibri" FontWeight="Bold" FontStyle="Italic"/>
+        <ListView Grid.Row="2" x:Name="tripLists" HorizontalAlignment="Stretch" Margin="15,15,15,15" VerticalAlignment="Stretch" FontSize="20"
+            ItemsSource="{Binding tripList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontWeight="Bold"/>
+        <Button Grid.Row="3" x:Name="button" Content="Load Next 5" Margin="15,15,15,15" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="loadNextResults"/>
     </Grid>
 </Page>

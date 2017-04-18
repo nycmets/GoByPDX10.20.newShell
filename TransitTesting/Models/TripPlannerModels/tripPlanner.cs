@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace GoByPDX.Models.TripPlannerModels
 {
-    class tripPlanner
+    public class tripPlanner
     {
+        public string fromString { get; set; }
+        public string toString { get; set; }
+        public DateTime leaveTime { get; set; }
+
+        public bool busToggle { get; set; }
+        public bool trainToggle { get; set; }
+
         public List<string> possibleFrom { get; set; }
         public List<string> possibleTo { get; set; }
 

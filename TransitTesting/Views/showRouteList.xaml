@@ -12,7 +12,6 @@
 
 
         <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Collapsed" Style="{StaticResource GridStyle}">
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="*"/>

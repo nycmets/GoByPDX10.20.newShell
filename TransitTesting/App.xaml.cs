@@ -45,6 +45,17 @@ namespace GoByPDX
             }
         }
 
+        private static Models.TripPlannerModels.tripPlanner _tripPlanner; //not sure how your viewmodel class is named
+        public static Models.TripPlannerModels.tripPlanner tripPlanner   //and a property to access it from
+        {
+            get
+            {
+                if (_tripPlanner == null)               //which creates the viewModel just before
+                    _tripPlanner = new Models.TripPlannerModels.tripPlanner(); //it's first used
+                return _tripPlanner;
+            }
+        }
+
         private static lastState _lastState; //not sure how your viewmodel class is named
         public static lastState lastState   //and a property to access it from
         {

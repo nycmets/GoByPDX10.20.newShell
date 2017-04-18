@@ -21,11 +21,14 @@ using GoByPDX.Models.TripPlannerModels;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Xml;
+using GoByPDX.ViewModels;
 
-namespace GoByPDX.ViewModels
+namespace GoByPDX
 {
     public class tripPlannerViewModel : INotifyPropertyChanged
     {
+        public string fromLocation { get; set; }
+        public string toLocation { get; set; }
 
         public ObservableCollection<string> bindingTripInfo1 = new ObservableCollection<string>();
         public ObservableCollection<string> tripList { get { return bindingTripInfo1; } set { this.OnPropertyChanged("bindingTripInfo1"); } }
@@ -42,67 +45,36 @@ namespace GoByPDX.ViewModels
 
         async public void getDirections( string fromLocation, string toLocation)
         {
-            //BasicGeoposition from_lat_lng = find_location(fromLocation);
-            //BasicGeoposition to_lat_lng = find_location(toLocation);
-            //Task<List<dynamic>> returnArrivalInfoListTask = Task.Run(() => loadXML(uri_arrivals, classForXML.GetType(), topProps, lowerProps, xmlNode_l));
-            //arrivals = returnArrivalInfoListTask.Result;
-
-            //Task<Geopoint> return_fromGP = Geocode(fromLocation);
-            //Geopoint from_GP = await return_fromGP;
-
-            //Task<Geopoint> return_toGP = Geocode(toLocation);
-            //Geopoint to_GP = await return_toGP;
-
-            //find_trip_directions(from_lat_lng, to_lat_lng);
-
-            //find_trip_directions(from_GP, to_GP);
-            find_trip_directions(fromLocation, toLocation);
+            App.tripPlanner.leaveTime = DateTime.Now;
+            find_trip_directions(fromLocation, toLocation, App.tripPlanner.leaveTime);
         }
-
-        public BasicGeoposition find_location(string location)
+        
+        public void find_trip_directions(string fromLocation, string toLocation, DateTime leaveTime )
         {
-            location = location.Replace(" ", "%20");
-            location = location.Replace("and", "");
-
-            string location_url_string = "http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&query=" + location + "%20portland%20or&o=xml&key=d8l9b6RU2EcjMncrRwx4~fKKyHyzPFPmghAi-JVfP0w~Anvx0AfcGv4Xz3O6Y_K9TNDFSsU8-LJ4ycFNteI-emI3Ts_2rn61pJL78fKq8sp0";
-            Uri uri_location = new Uri(location_url_string);
-
-            //BasicGeoposition locationPosition = new BasicGeoposition() { Latitude = Convert.ToDouble(vehicleLocation.latitude), Longitude = Convert.ToDouble(vehicleLocation.longitude) };
-
-            Task<Geopoint> returnTripPlannerListTask = Task.Run(() => loadXML_location(uri_location));
-            string test = Task.CompletedTask.ToString();
-
-            Geopoint location_GP = returnTripPlannerListTask.Result;
-            BasicGeoposition locationPosition = new BasicGeoposition() { Latitude = Convert.ToDouble(45), Longitude = Convert.ToDouble(-122) };
-
-            //http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&query=millikan%20way%20max%20portland%20or&o=xml&key=d8l9b6RU2EcjMncrRwx4~fKKyHyzPFPmghAi-JVfP0w~Anvx0AfcGv4Xz3O6Y_K9TNDFSsU8-LJ4ycFNteI-emI3Ts_2rn61pJL78fKq8sp0
-            return locationPosition;
-        }
-
-        //public void find_trip_directions(Geopoint from_GP, Geopoint to_GP)
-        public void find_trip_directions(string fromLocation, string toLocation)
-        {
-            // FInd the coordinates of place one
-            //http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&query=millikan%20way%20max%20portland%20or&o=xml&key=d8l9b6RU2EcjMncrRwx4~fKKyHyzPFPmghAi-JVfP0w~Anvx0AfcGv4Xz3O6Y_K9TNDFSsU8-LJ4ycFNteI-emI3Ts_2rn61pJL78fKq8sp0
-
-            //string fromCoord = from_GP.Position.Latitude.ToString() + "," + from_GP.Position.Longitude.ToString();
-            //string toCoord   = to_GP.Position.Latitude.ToString() + "," + to_GP.Position.Longitude.ToString();
-
             fromLocation = fromLocation.Replace(" ", "%20");
-            //fromLocation = fromLocation.Replace("and", "");
             toLocation = toLocation.Replace(" ", "%20");
-            //toLocation = toLocation.Replace("and", "");
+            string mode = "A";
 
-            //string location_url_string = "http://dev.virtualearth.net/REST/v1/Locations?culture=en-GB&query=" + location + "%20portland%20or&o=xml&key=d8l9b6RU2EcjMncrRwx4~fKKyHyzPFPmghAi-JVfP0w~Anvx0AfcGv4Xz3O6Y_K9TNDFSsU8-LJ4ycFNteI-emI3Ts_2rn61pJL78fKq8sp0";
-            //Uri uri_location = new Uri(location_url_string);
+            if (App.tripPlanner.busToggle && App.tripPlanner.trainToggle)
+            {
+                mode = "A";
+            }
+            else if (App.tripPlanner.busToggle)
+            {
+                mode = "B";
+            }
+            else if (App.tripPlanner.trainToggle)
+            {
+                mode = "T";
+            }
 
-            DateTime time = DateTime.Now;
-            string timeForURL = time.TimeOfDay.Hours.ToString() + ":" + time.TimeOfDay.Minutes.ToString();
+            //DateTime time = DateTime.Now;
+            string timeForURL = leaveTime.TimeOfDay.Hours.ToString() + ":" + leaveTime.TimeOfDay.Minutes.ToString();
             // Find the routes between the two places
             //string urlString_routes = "https://developer.trimet.org/ws/V1/trips/tripplanner/maxIntineraries/6/format/xml/fromplace/MILLIKAN%20WAY%20MAX%20STATION/toplace/zoo/time/11:30%20PM/arr/D/min/T/walk/0.50/mode/A/appId/7BCBE4BB29666DDCBB7D73113";
             //string urlString_routes = "https://developer.trimet.org/ws/V1/trips/tripplanner/maxIntineraries/6/format/xml/fromCoord/" + fromCoord +"/toCoord/" + toCoord +"/time/11:30%20PM/arr/D/min/T/walk/0.50/mode/A/appId/7BCBE4BB29666DDCBB7D73113";
             //string urlString_routes = "https://developer.trimet.org/ws/V1/trips/tripplanner/maxIntineraries/6/format/xml/fromPlace/" + fromLocation + "/toPlace/" + toLocation + "/time/11:30%20PM/arr/D/min/T/walk/0.50/mode/A/appId/7BCBE4BB29666DDCBB7D73113";
-            string urlString_routes = "https://developer.trimet.org/ws/V1/trips/tripplanner/maxIntineraries/6/format/xml/fromPlace/" + fromLocation + "/toPlace/" + toLocation + "/time/" + timeForURL +"/arr/D/min/T/walk/0.50/mode/A/appId/7BCBE4BB29666DDCBB7D73113";
+            string urlString_routes = "https://developer.trimet.org/ws/V1/trips/tripplanner/maxIntineraries/6/format/xml/fromPlace/" + fromLocation + "/toPlace/" + toLocation + "/time/" + timeForURL +"/arr/D/min/T/walk/0.50/mode/" + mode + "/appId/7BCBE4BB29666DDCBB7D73113";
 
 
             Uri uri_routes = new Uri(urlString_routes);
@@ -113,37 +85,51 @@ namespace GoByPDX.ViewModels
             string test = Task.CompletedTask.ToString();
 
             //List<tripItinerary> trips_l = returnTripPlannerListTask.Result;
-            tripPlanner tripPlanner = returnTripPlannerListTask.Result;
+            //tripPlanner tripPlanner = returnTripPlannerListTask.Result;
 
-            foreach (tripItinerary tripItinerary in tripPlanner.tripItinerary_l)
-            {
-                string legList = "";
-                foreach (tripLeg leg in tripItinerary.tripLeg_l)
-                {
-                    legList = legList + leg.number + "->";
-                }
-                //str = str.Remove(str.Length - 3);
-                legList = legList.Remove(legList.Length - 2);
-                //tripList.Add(tripItinerary.startTime + " " + tripItinerary.endTime);
-                //_output = tripItinerary.startTime + " " + tripItinerary.endTime;
-                //Output = tripItinerary.startTime + " " + tripItinerary.endTime;
+            App.tripPlanner.tripItinerary_l = returnTripPlannerListTask.Result.tripItinerary_l;
 
-                //bindingTripInfo1_test = tripItinerary.startTime + " " + tripItinerary.endTime;
-                bindingTripInfo1.Add(tripItinerary.startTime + " ->" + tripItinerary.endTime + ":   " + legList);
-            }
-            if (tripPlanner.possibleFrom != null)
+            //Debug.WriteLine(App.tripPlannerViewModel.bindingTripInfo1.ToString());
+
+            //foreach (tripItinerary tripItinerary in App.tripPlanner.tripItinerary_l)
+            //{
+            //    string legList = "";
+            //    foreach (tripLeg leg in tripItinerary.tripLeg_l)
+            //    {
+            //        legList = legList + leg.number + "->";
+            //    }
+            //    //str = str.Remove(str.Length - 3);
+            //    legList = legList.Remove(legList.Length - 2);
+            //    //tripList.Add(tripItinerary.startTime + " " + tripItinerary.endTime);
+            //    //_output = tripItinerary.startTime + " " + tripItinerary.endTime;
+            //    //Output = tripItinerary.startTime + " " + tripItinerary.endTime;
+
+            //    //bindingTripInfo1_test = tripItinerary.startTime + " " + tripItinerary.endTime;
+            //    App.tripPlannerViewModel.bindingTripInfo1.Add(tripItinerary.startTime + " ->" + tripItinerary.endTime + ":   " + legList);
+            //}
+            if (App.tripPlanner.possibleFrom != null)
             {
-                foreach (string loc in tripPlanner.possibleFrom)
+                foreach (string loc in App.tripPlanner.possibleFrom)
                 {
                     bindingPossibleFrom.Add(loc);
                 }
             }
-            if (tripPlanner.possibleTo != null)
+            else
             {
-                foreach (string loc in tripPlanner.possibleTo)
+                App.tripPlanner.fromString = fromLocation;
+                fromLocation = App.tripPlanner.fromString;
+            }
+            if (App.tripPlanner.possibleTo != null)
+            {
+                foreach (string loc in App.tripPlanner.possibleTo)
                 {
                     bindingPossibleTo.Add(loc);
                 }
+            }
+            else
+            {
+                App.tripPlanner.toString = toLocation;
+                toLocation = App.tripPlanner.fromString;
             }
         }
 

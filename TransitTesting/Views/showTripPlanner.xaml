@@ -9,21 +9,44 @@
     xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     mc:Ignorable="d">
 
-    <Grid>
-        <!--<Maps:MapControl
-            x:Name="MapControl1"
-            MapServiceToken="d8l9b6RU2EcjMncrRwx4~fKKyHyzPFPmghAi-JVfP0w~Anvx0AfcGv4Xz3O6Y_K9TNDFSsU8-LJ4ycFNteI-emI3Ts_2rn61pJL78fKq8sp0" />-->
+    <Grid x:Name="showRouteTabularView" Margin="0,0,0,0" Visibility="Visible" Style="{StaticResource GridStyle}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
 
-        <TextBox x:Name="fromTextBox" HorizontalAlignment="Left" Height="21" Margin="55,105,-386,-126" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="331" PlaceholderText="From Location"/>
-        <TextBox x:Name="toTextBox" HorizontalAlignment="Left" Height="1" Margin="55,225,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="331" PlaceholderText="To Location"/>
-        <ListView x:Name="tripLists" HorizontalAlignment="Stretch" Margin="4,399,4,4" VerticalAlignment="Stretch" FontSize="20"
-                        ItemsSource="{Binding Path=tripList, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" FontWeight="Bold"/>
-        <!--<TextBlock x:Name="routeInfo2" TextWrapping="Wrap" Text="TextBlock" Margin="68,515,54,206"/>
-            <TextBlock x:Name="routeInfo3" TextWrapping="Wrap" Text="TextBlock" Margin="68,612,54,109"/>-->
-        <Button x:Name="getDirections_button" Content="Get Directions" HorizontalAlignment="Left" Height="44" Margin="68,324,0,0" VerticalAlignment="Top" Width="317" Background="#33B86A6A" Click="loadItinerary_button"/>
-        <ComboBox x:Name="possibleFromComboBox" HorizontalAlignment="Left" Height="34" Margin="55,158,0,0" VerticalAlignment="Top" Width="331" Visibility="Collapsed"
+        <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="GO BY PDX" VerticalAlignment="Center" FontSize="60" FontFamily="Calibri" FontWeight="Bold" FontStyle="Italic"/>
+
+        <TextBox x:Name="fromTextBox" Grid.Row="2" Margin="15,0,15,0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" PlaceholderText="From Location" TextAlignment="DetectFromContent"/>
+        <ComboBox x:Name="possibleFromComboBox" Grid.Row="3"  Margin="15,5,15,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="Collapsed"
                   ItemsSource="{Binding Path=possibleFrom_l, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" PlaceholderText="Choose Possible From Location" SelectionChanged="updateFromTextBox"/>
-        <ComboBox x:Name="possibleToComboBox"   HorizontalAlignment="Left" Height="34" Margin="55,274,0,0" VerticalAlignment="Top" Width="331" Visibility="Collapsed"
+        <TextBox x:Name="toTextBox" Grid.Row="4"  Margin="15,0,15,0" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Bottom" PlaceholderText="To Location"/>
+        <ComboBox x:Name="possibleToComboBox" Grid.Row="5"  Margin="15,5,15,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Visibility="Collapsed"
                   ItemsSource="{Binding Path=possibleTo_l, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" PlaceholderText="Choose Possible To Location" SelectionChanged="updateToTextBox"/>
+        <Grid Grid.Row="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="transportationModes" Grid.Row="0" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Valid Transportation Modes" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+                <ToggleButton x:Name="busToggleButton" Grid.Column="1" Content="Bus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsChecked="True" Margin="15,1,15,1"/>
+                <ToggleButton x:Name="trainToggleButton" Grid.Column="2" Content="Max" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsChecked="True" Margin="15,1,15,1"/>
+            </Grid>
+        </Grid>
+        <Button x:Name="getDirections_button" Grid.Row="7" Content="Get Directions" Margin="15,15,15,15" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#33B86A6A" Click="loadItinerary_button"/>
+
     </Grid>
 </Page>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GoByPDX.Models.TripPlannerModels
 {
-    class tripItinerary
+    public class tripItinerary
     {
         public string startTime { get; set; }
         public string endTime { get; set; }

@@ -33,6 +33,7 @@ namespace GoByPDX.Views
         public showTripPlanner()
         {
             this.InitializeComponent();
+           
             this.DataContext = new tripPlannerViewModel();
 
         }
@@ -43,24 +44,32 @@ namespace GoByPDX.Views
             tripPlannerViewModel tripPlanner = new tripPlannerViewModel();
             //tripPlannerPageFieldsModel tripPlannerPage = new tripPlannerPageFieldsModel(); 
 
+            App.tripPlanner.busToggle = busToggleButton.IsChecked.Value;
+            App.tripPlanner.trainToggle = trainToggleButton.IsChecked.Value;
+
             Debug.WriteLine("To: " + toTextBox.ToString());
             Debug.WriteLine("TO: " + toTextBox.Text);
             tripPlanner.getDirections(fromTextBox.Text, toTextBox.Text);
             //this.DataContext = new tripPlannerViewModel();
-            this.DataContext = tripPlanner;
+            this.DataContext = App.tripPlanner;
             // Load up a model that holds the from and to locations from the form
             //tripPlannerPage.
-
+            
+            bool navigate = true;
             if (tripPlanner.bindingPossibleFrom != null && tripPlanner.bindingPossibleFrom.Count > 0)
             {
                 possibleFromComboBox.Visibility = Visibility.Visible;
+                navigate = false;
             }
             if (tripPlanner.bindingPossibleTo != null && tripPlanner.bindingPossibleTo.Count > 0)
             {
                 possibleToComboBox.Visibility = Visibility.Visible;
+                navigate = false;
             }
-
-            this.Frame.Navigate(typeof(showTransitLocation), vehicleTime);
+            if (navigate)
+            {
+                this.Frame.Navigate(typeof(tripPlannerResults), tripPlanner);
+            }
         }
 
         private void updateFromTextBox(object sender, SelectionChangedEventArgs e)
